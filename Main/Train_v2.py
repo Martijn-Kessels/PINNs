@@ -201,41 +201,41 @@ def initializeNetwork(LR: float, MOMENTUM: float, hidden: int, params=0, optim='
 
     return network, optimizer
 
-def initializeNetwork_guess_1(LR: float, MOMENTUM: float, hidden: int, params: list, optim='SGD') :
-    """Initialize the network with one neuron, with specific
-    starting values for w, a and b. THIS FUNCTION SHOULD BE
-    DELETED EVENTUALLY SINCE IT IS ENCLOSED IN THE NEXT
-    FUNCTION!"""
-    class Network(torch.nn.Module):
-        def __init__(self):
-            super(Network, self).__init__()
-            self.hidden_layer1 = torch.nn.Linear(1,hidden)
-            self.output_layer = torch.nn.Linear(hidden,1, bias=False)
+# def initializeNetwork_guess_1(LR: float, MOMENTUM: float, hidden: int, params: list, optim='SGD') :
+#     """Initialize the network with one neuron, with specific
+#     starting values for w, a and b. THIS FUNCTION SHOULD BE
+#     DELETED EVENTUALLY SINCE IT IS ENCLOSED IN THE NEXT
+#     FUNCTION!"""
+#     class Network(torch.nn.Module):
+#         def __init__(self):
+#             super(Network, self).__init__()
+#             self.hidden_layer1 = torch.nn.Linear(1,hidden)
+#             self.output_layer = torch.nn.Linear(hidden,1, bias=False)
 
-        def forward(self, x):
-            inputs = x
-            layer1_out = torch.tanh(self.hidden_layer1(inputs))
-            output = self.output_layer(layer1_out)
-            return output
+#         def forward(self, x):
+#             inputs = x
+#             layer1_out = torch.tanh(self.hidden_layer1(inputs))
+#             output = self.output_layer(layer1_out)
+#             return output
     
-    network = Network()
-    network = network.to(device)
+#     network = Network()
+#     network = network.to(device)
     
-    if optim == 'SGD':
-        optimizer = torch.optim.SGD(network.parameters(),lr=LR, momentum=MOMENTUM)
-    elif optim == 'LBFGS':
-        optimizer = torch.optim.LBFGS(network.parameters(), lr=LR)
+#     if optim == 'SGD':
+#         optimizer = torch.optim.SGD(network.parameters(),lr=LR, momentum=MOMENTUM)
+#     elif optim == 'LBFGS':
+#         optimizer = torch.optim.LBFGS(network.parameters(), lr=LR)
         
-    with torch.no_grad():
-        w = torch.tensor([[params[0]]]).to(device)
-        a = torch.tensor([[params[1]]]).to(device)
-        b = torch.tensor([params[2]]).to(device)
+#     with torch.no_grad():
+#         w = torch.tensor([[params[0]]]).to(device)
+#         a = torch.tensor([[params[1]]]).to(device)
+#         b = torch.tensor([params[2]]).to(device)
 
-        network.hidden_layer1.weight.data = w
-        network.hidden_layer1.bias.data = b
-        network.output_layer.weight.data = a
+#         network.hidden_layer1.weight.data = w
+#         network.hidden_layer1.bias.data = b
+#         network.output_layer.weight.data = a
 
-    return network, optimizer
+#     return network, optimizer
 
 def initializeNetwork_guess(LR: float, MOMENTUM: float, hidden: int, params: list[torch.Tensor], optim='SGD'):
     """Initialize the network with multiple neurons, with specific starting values
@@ -385,8 +385,9 @@ def train_network(LR: float, HIDDEN: int, NR_EPOCHS: int, h_SAMPLE: float, LAMBD
         *) after how many epochs we want to animate the plot, choosing -1 will result in no plots at all,
         *) the value of epsilon,
         *) a function on how we want to initialize the network (optional),
-        *) the optimizer (optional),
-        *) eventually initial parameters (optional),
+        *) the initialization function (optional),
+        *) eventually initial parameters, only if the optimizer is not default (optional),
+        *) momentum parameter (optional),
         *) bound on parameter size, if negative, there is no bound (optional).
     Returns a list with the values for w, b and a. Also returns a list with the losses and a list with the inflection points."""
     
