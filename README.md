@@ -6,12 +6,10 @@ All Python code is in the folder `CODE`. The code in the folder `CODE/Old_code` 
 
 ### Experiments
 
-* `Main`: contains the classes to train a network and visualise the results
-* `Example_Code.ipynb`: an example code, explaine in the section **How to use the code**;
-* `GradientFlow.ipynb`: analyse a system of one neuron using gradient flow to minimize, instead of neural networks;
-* `Hessian.ipynb`: calculate all derivatives, semi-analytically. In fact the Hessian is not calculated;
-* `Minimize_a.ipynb`: here we minimize over $a$ first, and then over $u_0$ and $u_1$. Related to the coordinate transform;
-* `Polynomial.ipynb`: fits the best polynomials of degree $n$, also contains a part where the theoretical guess using perturbation theory is analyzed.
+* `Main`: contains the classes to train a network and visualise the results.
+* `Example_Code.ipynb`: some examples on how to use the code to train the neural network.
+* `Poly.ipynb`: some examples on how the `Legendre_solution` class works.
+* `Figures.ipynb`: contains the code to generate all used figures.
 
 ## How to use the code
 
@@ -20,7 +18,18 @@ In the folder `Code/Experiments/`, the file `Example_Code.ipynb`, is an example 
 To train the network, you need to use the following function:
 
 ```
-train_network(LR: float, HIDDEN: int, NR_EPOCHS: int, h_SAMPLE: float, LAMBDA: float, PLOT_INTERVAL: int, EPSIL: float, Initializer=initializeNetwork, optim='SGD', params=0)
+train_network(LR: float,
+              HIDDEN: int,
+              NR_EPOCHS: int,
+              h_SAMPLE: float,
+              LAMBDA: float,
+              PLOT_INTERVAL: int,
+              EPSIL: float,
+              Initializer=initializeNetwork,
+              optim='SGD',
+              params=0,
+              momentum=0,
+              M=-1)
 ```
 It has the following arguments:
 * `LR`: Learning rate;
@@ -34,6 +43,7 @@ It has the following arguments:
 * `Optimizer`: By default SGD.
 * `params`: initial parameters for different initializer than default. If not specified we set it equal to zero and the code will neglect it.
 * `momentum`: Momentum, by default 0.
+* `M`: Bound on parameter size, if `M=-1` the parameters are unbounded.
 
 In the example, the arguments are specified as follows `LR=0.1` etcetera. This is not necessary, but done for clarity.
 
