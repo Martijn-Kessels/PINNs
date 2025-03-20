@@ -1,19 +1,24 @@
-# martijn-kessels-mep
+# PINNs
+
+This directory contains multiple methods to calculate the minimizer of the functional given by
+
+$$L_\varepsilon(u)= \frac{1}{2}\lVert -\varepsilon u''+u'-1\rVert_{L^2(0,1)}^2+\frac{1}{4}u(0)^2+\frac{1}{4}u(1)^2$$
+
+We minimize this using $\tanh$-neural networks or using polynomials, parameterized by either the canonical basis functions or the shifted Legendre basis functions.
 
 ## Structure of the directory
 
-All Python code is in the folder `CODE`. The code in the folder `CODE/Old_code` might not work, due to the restructering of the folders. The code in `Code/Experiments` should all work, which also includes a code example. The folder `CODE/Experiments/Main` includes some modules that are needed to execute the code. Most resulting figures are saved somewhere in the folder `Latex`, which also includes all tex files. Data is saved in the folder `Saved_Data`.
-
-### Experiments
-
 * `Main`: contains the classes to train a network and visualise the results.
+  * `Canonical.py`: contains some functions to calculate the minimizers of $L_\varepsilon$ using the canonical basis. These functions are merely used to illustrate that it is not a good idea to compute the minimizers using this basis.
+  * `Legendre.py`: contains a class to obtain the minimizer using the shifted Legendre basis.
+  * `Train_v2.py` : contains a function to approximate the minimizer using a neural network and a class which contains all the results.
 * `Example_Code.ipynb`: some examples on how to use the code to train the neural network.
 * `Poly.ipynb`: some examples on how the `Legendre_solution` class works.
 * `Figures.ipynb`: contains the code to generate all used figures.
 
 ## How to use the code
 
-In the folder `Code/Experiments/`, the file `Example_Code.ipynb`, is an example of how to use the code is added, and it's main functions are shown.
+The file `Example_Code.ipynb`, shows how to train the network, and the main functions of the class `train_network` are shown.
 
 To train the network, you need to use the following function:
 
@@ -47,7 +52,7 @@ It has the following arguments:
 
 In the example, the arguments are specified as follows `LR=0.1` etcetera. This is not necessary, but done for clarity.
 
-It returns an object of the class `PINN_solution`, which will be explained below.
+It returns an object of the class `PINN_solution`, which is explained below.
 
 ### Initializer
 By default pytorch standard. If we set it to `initializeNetwork_guess`, we need to specify initial values. We should input them like `[w,a,b]`, where the parameters look as follows:
@@ -65,7 +70,7 @@ By default SGD. Also possible to use LBFGS.
 
 ### The class `PINN_solution`
 Every step, the loss, inflection points and parameter values are saved.
-For now, also for more neurons, the results are saved in a 1D array, so we need to untangle it before we make plots. I might change this later.
+For now, also for more neurons, the results are saved in a 1D array, so we need to untangle it before we make plots.
 You can acces the lists as follows:
 
 ```
@@ -81,4 +86,24 @@ Result.w_list
       .loss
       .hidden
 ```
-With `.evol_plot()`, you get a picture of the evolution of the parameters w,a,b, and with `.evol_plot_grad`, you get a figure but then of the derivatives. With `.loss_infl_plots()`. The loss and the inflection points are shown.
+It also has the following functions:
+*  `.update(network, loss)`: updates the class after a training step, all values listed above are updated.
+*  `.evol_plot(savepath=None)`: makes a plot of the evolution of the parameters, if `savepath` is specified, it saves this plot in the specified path.
+*  `.evol_plot_grad(savepath=None)`: makes a plot of the evolution of the gradient of the parameters.
+*  `.loss_infl_plots(savepath=None)`: makes a plot of the evolution of the loss and inflection points.
+*  `.loss_plot(savepath=None)`: makes a plot of the evolution of the loss.
+*  `.sol()`: returns the approximated solution.
+*  `.show_sol(savepath=None)`: makes a plot of the approximated solution.
+
+### The class `Legendre_solution`
+
+We can initialize the class using `Legendre_solution(Np,epsil)`. It has the following attributes and functions:
+*  `.Np`: degree of the polynomial.
+*  `.epsil`: epsilon.
+*  `.A`: matrix $A$ corresponding to Legendre system $Ax=b$.
+*  `.b`: vector $b$ corresponding to Legendre system $Ax=b$.
+*  `.coeffs`: solution $x$ to $Ax=b$.
+*  `.Loss`: corresponding loss to minimizer.
+*  `.y_coords()`: gives the y coordinates of the solution.
+*  `.show_approx()`: plot the approximation
+*  `.cond()`: calculate the condition number.
