@@ -135,7 +135,7 @@ class PINN_solution:
         plt.show()
 
         
-    def sol(self, savepath=None):
+    def sol(self):
         x= np.arange(0, 1.0001, 0.001)
         y= np.zeros(1001)
         for i in range(self.hidden):
@@ -144,7 +144,7 @@ class PINN_solution:
 
     def show_sol(self, savepath=None):
         x= np.arange(0, 1.0001, 0.001)
-        self.sol()
+        y = self.sol()
         plt.figure(figsize=[4, 3])
         plt.plot(x,y)
         plt.grid()
